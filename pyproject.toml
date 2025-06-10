@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=42.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loomer"
+version = "0.1.0"
+description = "Aplicación Loomer para procesar códigos de cadena"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "matplotlib>=3.5.3",
+    "numpy>=1.21.6",
+    "Pillow>=9.0.0",
+]
+
+[tool.setuptools]
+packages = ["src"]

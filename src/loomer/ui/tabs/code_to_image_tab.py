@@ -34,7 +34,7 @@ class CodeToImageTab:
     self.code_text.insert(tk.END, "021301233210")
 
     # Validación para permitir solo números
-    self.code_text.bind("<KeyPress>", self.on_key_press)
+    # self.code_text.bind("<KeyPress>", self.on_key_press)
     self.code_text.bind("<KeyRelease>", self.on_key_release)    # Dropdown y texto
     code_label = tk.Label(left_frame, text="Código de cadena a leer:",
                          fg=self.styles.COLOR_TEXTO, bg=self.styles.COLOR_FONDO)
@@ -88,10 +88,13 @@ class CodeToImageTab:
     # Generar imagen basada en el código y formato seleccionado
     self.current_image = ImageProcessor.generate_image_from_code(code, code_format=code_format)
     # Mostrar la imagen en el componente
-    self.image_display.set_image(self.current_image)
+    if self.current_image:
+      self.image_display.set_image(self.current_image, None)
+    else:
+      print("No se pudo generar la imagen desde el código")
 
   def save_image(self):
     # Obtenemos la imagen actual del componente
-    image = self.image_display.get_image()
+    image, _ = self.image_display.get_image()
     if image:
       save_image_file(image)

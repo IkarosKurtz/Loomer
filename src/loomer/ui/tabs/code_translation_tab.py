@@ -29,6 +29,25 @@ class CodeTranslationTab:
                         fg=self.styles.COLOR_TEXTO, bg=self.styles.COLOR_FONDO)
     left_label.pack(anchor=tk.W, pady=(0, 5))
 
+    # Frame para el selector de formato de origen
+    source_format_frame = tk.Frame(left_frame, bg=self.styles.COLOR_FONDO)
+    source_format_frame.pack(fill=tk.X, pady=(0, 5))
+
+    # Etiqueta para el formato de origen
+    source_format_label = tk.Label(source_format_frame, text="Formato de origen:",
+                                 fg=self.styles.COLOR_TEXTO, bg=self.styles.COLOR_FONDO)
+    source_format_label.pack(side=tk.LEFT)
+
+    # Combobox para seleccionar el formato de origen
+    self.source_format_combo = CodeFormatComboBox(
+        source_format_frame,
+        label_text=None,
+        bg=self.styles.COLOR_FONDO,
+        text_color=self.styles.COLOR_TEXTO,
+        combo_bg=self.styles.COLOR_PRIMARIO
+    )
+    self.source_format_combo.pack(side=tk.RIGHT, fill=tk.X, expand=True, padx=(10, 0))
+
     # Área para el código de entrada (solo números)
     self.source_code_text = tk.Text(left_frame, bg=self.styles.COLOR_PRIMARIO, height=20,
                                     width=30)
@@ -36,7 +55,7 @@ class CodeTranslationTab:
     self.source_code_text.insert(tk.END, "021301233210")
 
     # Validación para permitir solo números
-    self.source_code_text.bind("<KeyPress>", self.on_key_press)
+    # self.source_code_text.bind("<KeyPress>", self.on_key_press)
     self.source_code_text.bind("<KeyRelease>", self.on_key_release)
 
     # Frame central para los controles de traducción
@@ -46,8 +65,8 @@ class CodeTranslationTab:
                                 fg=self.styles.COLOR_TEXTO, bg=self.styles.COLOR_FONDO)
     translate_label.pack(anchor=tk.CENTER, pady=(120, 5))
 
-    # Componente para la selección de formato y botón de traducción
-    self.code_format_selector = CodeFormatComboBox(
+    # Componente para la selección de formato destino y botón de traducción
+    self.target_format_selector = CodeFormatComboBox(
         center_frame,
         label_text=None,  # Ya tenemos una etiqueta arriba
         bg=self.styles.COLOR_FONDO,
@@ -57,7 +76,7 @@ class CodeTranslationTab:
         button_command=self.translate_code,
         button_color=self.styles.COLOR_SECUNDARIO
     )
-    self.code_format_selector.pack(fill=tk.X)
+    self.target_format_selector.pack(fill=tk.X)
 
     # Frame derecho para el código de salida
     right_frame = tk.Frame(main_frame, bg=self.styles.COLOR_FONDO)
@@ -83,11 +102,19 @@ class CodeTranslationTab:
   def translate_code(self):
     # Obtener el código ingresado por el usuario
     source_code = self.source_code_text.get("1.0", tk.END).strip()
-    target_format = self.code_format_selector.get_selected_format()
+    source_format = self.source_format_combo.get_selected_format()
+    target_format = self.target_format_selector.get_selected_format()
 
     # Realizar la traducción
-    translated_code = CodeProcessor.translate_code(source_code, target_format=target_format)
-    self.insert_target_code(translated_code)
+    translated_code = CodeProcessor.translate_code(
+      source_code,
+      source_format=source_format,
+      target_format=target_format
+    )
+    if 'error' in translated_code:
+      self.insert_target_code(translated_code['error'])
+    else:
+      self.insert_target_code(''.join([str(i) for i in translated_code['result']]))
 
   def insert_target_code(self, text):
     self.target_code_text.config(state="normal")

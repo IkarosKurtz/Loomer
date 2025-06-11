@@ -6,6 +6,9 @@ from tkinter import ttk
 from ...core.image_processor import ImageProcessor
 from ..styles import AppStyles
 from ..components import ImageDisplayFrame, CodeFormatComboBox
+from rich.console import Console
+
+console = Console()
 
 
 class ImageToCodeTab:
@@ -77,27 +80,27 @@ class ImageToCodeTab:
         # Cargar la imagen con PIL
         image = Image.open(file_path)
         # Establecer la imagen en el componente
-        self.image_display.set_image(image)
+        self.image_display.set_image(image, file_path)
         # Guardar referencia para el procesamiento
         self.current_image = image
       except Exception as e:
-        print(f"Error al cargar la imagen: {e}")
-        self.insert_result_text(f"Error al cargar la imagen: {e}")
+        console.print_exception()
 
   def process_image(self):
     # Procesar la imagen actual si existe
-    image = self.image_display.get_image()
-    if image:
-      self.generate_code_from_image(image)
+    _, image_path = self.image_display.get_image()
+    console.print(f"Imagen cargada: {image_path}")
+    if image_path:
+      self.generate_code_from_image(image_path)
     else:
       # Si no hay imagen cargada, mostrar mensaje en área de resultado
       self.insert_result_text("No hay imagen para procesar")
 
-  def generate_code_from_image(self, image):
+  def generate_code_from_image(self, image_path):
     # Obtener el formato seleccionado para procesar la imagen
     selected_format = self.code_format_selector.get_selected_format()
     # Pasar el formato al procesador de imágenes
-    code = ImageProcessor.generate_code_from_image(image, code_format=selected_format)
+    code = ImageProcessor.generate_code_from_image(image_path, code_format=selected_format)
     self.insert_result_text(code)
 
   def insert_result_text(self, text):

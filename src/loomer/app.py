@@ -6,6 +6,7 @@ from .ui.styles import AppStyles
 from .ui.tabs.image_to_code_tab import ImageToCodeTab
 from .ui.tabs.code_to_image_tab import CodeToImageTab
 from .ui.tabs.code_translation_tab import CodeTranslationTab
+from .ui.tabs.code_details_tab import CodeDetailsTab
 
 
 class LoomerApp:
@@ -32,16 +33,16 @@ class LoomerApp:
     self.notebook = ttk.Notebook(self.content_frame)
 
     # Configure tab styles
-    AppStyles.configure_styles()
-
-    # Create tabs
+    AppStyles.configure_styles()    # Create tabs
     self.image_to_code_tab = ImageToCodeTab(self.notebook)
     self.code_to_image_tab = CodeToImageTab(self.notebook)
     self.code_translation_tab = CodeTranslationTab(self.notebook)
+    self.code_details_tab = CodeDetailsTab(self.notebook)
 
     # Add tabs to notebook
     self.notebook.add(self.image_to_code_tab.tab, text="Imagen a Código")
     self.notebook.add(self.code_to_image_tab.tab, text="Código a Imagen")
     self.notebook.add(self.code_translation_tab.tab, text="Traducción")
+    self.notebook.add(self.code_details_tab.tab, text="Detalles de Código")
 
     self.notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)

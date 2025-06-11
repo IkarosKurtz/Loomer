@@ -6,10 +6,10 @@ import math
 
 # Freeman 4-direction mapping
 directions_4 = {
-    (1, 0): 0,    # right
-    (0, 1): 1,    # down
-    (-1, 0): 2,   # left
-    (0, -1): 3    # up
+    (1, 0): 0,    # Derecha
+    (0, 1): 1,    # Abajo
+    (-1, 0): 2,   # Izquierda
+    (0, -1): 3    # Arriba
 }
 inv_dir_4 = {v: k for k, v in directions_4.items()}
 
@@ -89,7 +89,7 @@ def trace_boundary(binary):
   return chain, path
 
 
-def procesar_imagen_freeman(imagen, umbral=127) -> list:
+def procesar_imagen_freeman(image_path, umbral=127) -> list:
   """
   Procesa una imagen para generar su código de cadena Freeman de 4 direcciones.
 
@@ -102,10 +102,11 @@ def procesar_imagen_freeman(imagen, umbral=127) -> list:
   """
   # Cargar y preprocesar imagen
   try:
-    img = imagen.convert('L')  # 'L' para escala de grises
+    image = PIL.Image.open(image_path)
+    img = image.convert('L')  # 'L' para escala de grises
     img_array = np.array(img)
   except Exception as e:
-    print(f"Error al cargar la imagen: {e}")
+    print(f"Error al cargar la imagen <img_to_4f>: {e}")
     return []
 
   # Binarizar con NumPy
@@ -143,7 +144,7 @@ def procesar_imagen_freeman(imagen, umbral=127) -> list:
 if __name__ == "__main__":
   # Procesar una imagen y obtener el código de cadena
   # Cambia esto a la ruta de tu imagen
-  ruta_imagen = PIL.Image.open('./assets/WhatsApp Image 2025-06-09 at 14.26.32.jpeg')
+  ruta_imagen = './assets/WhatsApp Image 2025-06-09 at 14.26.32.jpeg'
   codigo_freeman = procesar_imagen_freeman(ruta_imagen)
 
   if codigo_freeman:

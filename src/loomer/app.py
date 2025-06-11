@@ -1,6 +1,11 @@
 # src/loomer/app.py
+import os
+import sys
 import tkinter as tk
 from tkinter import Tk, ttk
+
+from PIL import ImageTk
+import PIL
 
 from .ui.styles import AppStyles
 from .ui.tabs.image_to_code_tab import ImageToCodeTab
@@ -13,7 +18,23 @@ class LoomerApp:
   def __init__(self, root: Tk):
     self.root = root
     self.root.title("Loomer")
-    self.root.geometry("960x540")
+
+    # Determina si el script está ejecutándose como un ejecutable PyInstaller
+    if getattr(sys, 'frozen', False):
+      # Ruta base cuando está compilado
+      base_path = sys._MEIPASS
+    else:
+      # Ruta base cuando se ejecuta desde el script
+      base_path = os.path.dirname(os.path.abspath(__file__))
+    # Ruta completa al archivo PNG
+    image_path = os.path.join(base_path, "assets", "Loomer.png")
+
+    try:
+      img = PIL.Image.open(image_path)
+    except FileNotFoundError:
+      print(f"Error: No se encontró la imagen en {image_path}")
+      sys.exit(1)
+    self.root.iconphoto(True, ImageTk.PhotoImage(img))
 
     # Apply styles
     self.styles = AppStyles

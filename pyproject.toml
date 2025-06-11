@@ -11,8 +11,14 @@ requires-python = ">=3.7"
 dependencies = [
     "matplotlib>=3.5.3",
     "numpy>=1.21.6",
+    "opencv-python>=4.11.0.86",
     "Pillow>=9.0.0",
 ]
 
 [tool.setuptools]
 packages = ["src"]
+
+[dependency-groups]
+dev = [
+    "rich>=13.8.1",
+]

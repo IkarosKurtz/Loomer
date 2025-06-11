@@ -10,6 +10,13 @@
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal"
+    },
+    {
+      "name": "App",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/new_main.py",
+      "console": "integratedTerminal"
     }
   ]
 }

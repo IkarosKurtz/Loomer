@@ -1,6 +1,8 @@
 # src/loomer/core/image_processor.py
-from PIL import Image
 
+from src.loomer.libs.f8_f4_to_img import f4_to_image
+from src.loomer.libs.imt_to_8f import procesar_imagen_freeman_8
+from src.loomer.utils.pipe import Methods, Pipe
 from src.loomer.libs.img_to_4f import procesar_imagen_freeman
 
 
@@ -11,7 +13,7 @@ class ImageProcessor:
     Generate a chain code from an image
 
     Args:
-        image: PIL Image object
+        image: ruta a la imagen
         code_format: Format of the chain code to generate (e.g., "3OT", "F4", etc.)
 
     Returns:
@@ -25,18 +27,30 @@ class ImageProcessor:
     if code_format == "F4":
       code = "".join([str(i) for i in procesar_imagen_freeman(image)])
     elif code_format == "F8":
-      code = "121212342323567"
+      code = "".join([str(i) for i in procesar_imagen_freeman_8(image)])
     elif code_format == "AF8":
-      code = "313131313232"
+      chain_code = procesar_imagen_freeman(image)
+      calculate = Pipe('F4', 'F8', 'AF8')
+      code, _ = calculate(chain_code)
+
+      code = "".join([str(i) for i in code])
     elif code_format == "VCC":
-      code = "242424242424"
+      chain_code = procesar_imagen_freeman(image)
+      calculate = Pipe('F4', 'VCC')
+      code, _ = calculate(chain_code)
+
+      code = "".join([str(i) for i in code])
     else:  # 3OT por defecto
-      code = "021301233210"
+      chain_code = procesar_imagen_freeman(image)
+      calculate = Pipe('F4', '3OT')
+      code, _ = calculate(chain_code)
+
+      code = "".join([str(i) for i in code])
 
     return code
 
   @staticmethod
-  def generate_image_from_code(code, code_format="3OT", size=(300, 300)):
+  def generate_image_from_code(code, code_format: Methods = "3OT", size=(300, 300)):
     """
     Generate an image from a chain code
 
@@ -48,13 +62,24 @@ class ImageProcessor:
     Returns:
         PIL Image object
     """
-    # Simulación: En una aplicación real, aquí se generaría una imagen
-    # basada en el código de cadena y su formato específico
+    code = [int(c) for c in code if c.isdigit()]
+    if code_format == "F8":
+      calculate = Pipe('F8', 'F4')
+      code, _ = calculate(code)
+    elif code_format == "F4":
+      pass
+    elif code_format == "AF8":
+      calculate = Pipe('AF8', 'F8', 'F4')
+      code, _ = calculate(code)
+    elif code_format == "VCC":
+      calculate = Pipe('VCC', 'F4')
+      code, _ = calculate(code)
+    elif code_format == "3OT":
+      calculate = Pipe('3OT', 'F4')
+      code, _ = calculate(code)
+    else:
+      raise ValueError(f"Formato de código no reconocido: {code_format}")
+    print(code)
+    image = f4_to_image(code, padding=15, scale=60)
 
-    # Por ahora, simplemente creamos una imagen en blanco
-    # Pero en una implementación real, interpretaríamos el código según su formato
-    blank_image = Image.new('RGB', size, color='black')
-
-    # Aquí iría la lógica para dibujar basada en el código
-
-    return blank_image
+    return image

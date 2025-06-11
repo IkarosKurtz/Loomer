@@ -1,6 +1,9 @@
 # src/loomer/ui/components.py
 import tkinter as tk
+from typing import Any
 from PIL import Image, ImageTk
+
+from src.loomer.utils.pipe import Methods
 
 from .styles import AppStyles
 
@@ -29,6 +32,7 @@ class ImageDisplayFrame:
     self.button_color = button_color
     self.image_size = image_size
     self.current_image = None
+    self.image_path = None
     self.photo_image = None
 
     # Crear el frame principal
@@ -64,15 +68,17 @@ class ImageDisplayFrame:
     """Configura la función a ejecutar al presionar el botón de carga"""
     self.load_btn.config(command=command)
 
-  def set_image(self, pil_image):
+  def set_image(self, pil_image, image_path):
     """
     Establece una imagen PIL para mostrar en el componente
 
     Args:
         pil_image: Imagen PIL a mostrar
+        image_path: Ruta de la imagen (puede ser None)
     """
     if pil_image:
       self.current_image = pil_image
+      self.image_path = image_path
       # Redimensionar manteniendo proporción
       img_width, img_height = pil_image.size
       max_width, max_height = self.image_size
@@ -91,9 +97,9 @@ class ImageDisplayFrame:
       self.photo_image = ImageTk.PhotoImage(resized_img)
       self.img_display.config(image=self.photo_image)
 
-  def get_image(self):
-    """Devuelve la imagen PIL actual"""
-    return self.current_image
+  def get_image(self) -> tuple[Any, str]:
+    """Devuelve la imagen PIL actual y su ruta"""
+    return self.current_image, self.image_path
 
   def pack(self, **kwargs):
     """Empaqueta el frame principal con los parámetros dados"""
@@ -104,7 +110,7 @@ class CodeFormatComboBox:
   """Componente para seleccionar formatos de códigos de cadena"""
 
   # Lista de formatos de códigos de cadena disponibles
-  AVAILABLE_FORMATS = ["3OT", "F4", "F8", "AF8", "VCC"]
+  AVAILABLE_FORMATS: list[Methods] = ["3OT", "F4", "F8", "AF8", "VCC"]
 
   def __init__(self, parent, label_text=None, bg=AppStyles.COLOR_FONDO,
                text_color=AppStyles.COLOR_TEXTO, combo_bg=AppStyles.COLOR_PRIMARIO,
@@ -160,7 +166,7 @@ class CodeFormatComboBox:
                             command=button_command)
       self.button.pack(side=tk.RIGHT, padx=(10, 0))
 
-  def get_selected_format(self):
+  def get_selected_format(self) -> Methods:
     """Devuelve el formato de código seleccionado actualmente"""
     return self.combo.get()
 

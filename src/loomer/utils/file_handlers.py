@@ -27,7 +27,7 @@ def load_image_file(display_widget, size=(300, 300)):
       display_widget.image = photo  # Mantener referencia
       return image
     except Exception as e:
-      print(f"Error al cargar la imagen: {e}")
+      print(f"Error al cargar la imagen <file_handlers>: {e}")
       return None
 
   return None

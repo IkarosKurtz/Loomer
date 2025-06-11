@@ -34,7 +34,7 @@ class CodeDetailsTab:
     self.code_text.pack(fill=tk.BOTH, expand=True)
     self.code_text.bind("<KeyRelease>", self.on_key_release)    # Dropdown y texto
 
-    self.code_text.insert(tk.END, "021301233210")  # Valor por defecto
+    self.code_text.insert(tk.END, "")  # Valor por defecto
 
     # Botón de análisis
     analyze_button = tk.Button(left_frame, text="Analizar Código",
@@ -120,33 +120,36 @@ class CodeDetailsTab:
 
   def update_visualization(self, data, total_len):
     """Actualiza la visualización de la distribución de caracteres"""
-    # Limpiar el gráfico anterior
-    self.plot.clear()
+    try:
+      # Limpiar el gráfico anterior
+      self.plot.clear()
 
-    # Convertir los datos a formato para graficar
-    chars = list(data.keys())
-    counts = list(data.values())
-    probabilities = [count / total_len for count in counts]
+      # Convertir los datos a formato para graficar
+      chars = list(data.keys())
+      counts = list(data.values())
+      probabilities = [count / total_len for count in counts]
 
-    # Crear gráfico de barras
-    bars = self.plot.bar(chars, counts, color=self.styles.COLOR_SECUNDARIO)
+      # Crear gráfico de barras
+      bars = self.plot.bar(chars, counts, color=self.styles.COLOR_SECUNDARIO)
 
-    # Añadir etiquetas
-    self.plot.set_xlabel('Caracteres')
-    self.plot.set_ylabel('Frecuencia')
-    self.plot.set_title('Distribución de Caracteres')
+      # Añadir etiquetas
+      self.plot.set_xlabel('Caracteres')
+      self.plot.set_ylabel('Frecuencia')
+      self.plot.set_title('Distribución de Caracteres')
 
-    # Ajustar el límite y para que no se corten los valores
-    max_count = max(counts) if counts else 0
-    # Añadir 15% más de espacio arriba    # Añadir valores y probabilidades sobre las barras (en porcentaje)
-    self.plot.set_ylim(0, max_count * 1.15)
-    for i, bar in enumerate(bars):
-      height = bar.get_height()
-      prob_percent = probabilities[i] * 100  # Convertir a porcentaje
-      prob_text = f"{prob_percent:.1f}%"
-      self.plot.text(bar.get_x() + bar.get_width() / 2., height,
-              f"{height}\n({prob_text})", ha='center', va='bottom')
+      # Ajustar el límite y para que no se corten los valores
+      max_count = max(counts) if counts else 0
+      # Añadir 15% más de espacio arriba    # Añadir valores y probabilidades sobre las barras (en porcentaje)
+      self.plot.set_ylim(0, max_count * 1.15)
+      for i, bar in enumerate(bars):
+        height = bar.get_height()
+        prob_percent = probabilities[i] * 100  # Convertir a porcentaje
+        prob_text = f"{prob_percent:.1f}%"
+        self.plot.text(bar.get_x() + bar.get_width() / 2., height,
+                f"{height}\n({prob_text})", ha='center', va='bottom')
 
-    # Refrescar el canvas
-    self.figure.tight_layout()
-    self.canvas.draw()
+      # Refrescar el canvas
+      self.figure.tight_layout()
+      self.canvas.draw()
+    except Exception as e:
+      messagebox.showerror("Error", f"Error al generar la visualización: {str(e)}")

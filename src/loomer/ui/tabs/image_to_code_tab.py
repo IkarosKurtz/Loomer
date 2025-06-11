@@ -1,6 +1,7 @@
 # src/loomer/ui/tabs/image_to_code_tab.py
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 
 
 from ...core.image_processor import ImageProcessor
@@ -64,7 +65,7 @@ class ImageToCodeTab:
     self.result_text = tk.Text(right_frame, bg=self.styles.COLOR_PRIMARIO, height=15,
                              width=30, state="disabled")
     self.result_text.pack(fill=tk.BOTH, expand=True)
-    self.insert_result_text("021301233210")
+    self.insert_result_text("")
 
   def load_image(self):
     """Carga una imagen desde un archivo y la muestra en el componente"""
@@ -85,6 +86,7 @@ class ImageToCodeTab:
         self.current_image = image
       except Exception as e:
         console.print_exception()
+        messagebox.showerror("Error", f"No se pudo cargar la imagen: {str(e)}")
 
   def process_image(self):
     # Procesar la imagen actual si existe
@@ -94,14 +96,20 @@ class ImageToCodeTab:
       self.generate_code_from_image(image_path)
     else:
       # Si no hay imagen cargada, mostrar mensaje en área de resultado
-      self.insert_result_text("No hay imagen para procesar")
+      messagebox.showwarning("Advertencia", "No hay imagen para procesar. Por favor cargue una imagen primero.")
 
   def generate_code_from_image(self, image_path):
-    # Obtener el formato seleccionado para procesar la imagen
-    selected_format = self.code_format_selector.get_selected_format()
-    # Pasar el formato al procesador de imágenes
-    code = ImageProcessor.generate_code_from_image(image_path, code_format=selected_format)
-    self.insert_result_text(code)
+    try:
+      # Obtener el formato seleccionado para procesar la imagen
+      selected_format = self.code_format_selector.get_selected_format()
+      # Pasar el formato al procesador de imágenes
+      code = ImageProcessor.generate_code_from_image(image_path, code_format=selected_format)
+      self.insert_result_text(code)
+    except Exception as e:
+      console.print_exception()
+      error_msg = f"Error al procesar la imagen: {str(e)}"
+      messagebox.showerror("Error de procesamiento", error_msg)
+      self.insert_result_text(f"Error: {str(e)}")
 
   def insert_result_text(self, text):
     self.result_text.config(state="normal")

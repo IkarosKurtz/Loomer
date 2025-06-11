@@ -1,6 +1,7 @@
 # src/loomer/ui/tabs/code_to_image_tab.py
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 
 from ...utils.validators import validate_numeric_input, check_numeric_content
 from ...utils.file_handlers import save_image_file
@@ -31,7 +32,7 @@ class CodeToImageTab:
     self.code_text = tk.Text(left_frame, bg=self.styles.COLOR_PRIMARIO, height=15,
                             width=30)
     self.code_text.pack(fill=tk.BOTH, expand=True)
-    self.code_text.insert(tk.END, "021301233210")
+    self.code_text.insert(tk.END, "")
 
     # Validación para permitir solo números
     # self.code_text.bind("<KeyPress>", self.on_key_press)
@@ -78,23 +79,41 @@ class CodeToImageTab:
     check_numeric_content(self.code_text)
 
   def generate_image_from_code_input(self):
-    # Obtener el código ingresado por el usuario
-    code = self.code_text.get("1.0", tk.END).strip()
-    # Obtener el formato seleccionado
-    selected_format = self.code_format_selector.get_selected_format()
-    self.generate_image_from_code(code, selected_format)
+    try:
+      # Obtener el código ingresado por el usuario
+      code = self.code_text.get("1.0", tk.END).strip()
+
+      if not code:
+        messagebox.showwarning("Advertencia", "Por favor ingrese un código de cadena para generar la imagen.")
+        return
+
+      # Obtener el formato seleccionado
+      selected_format = self.code_format_selector.get_selected_format()
+      self.generate_image_from_code(code, selected_format)
+    except Exception as e:
+      messagebox.showerror("Error", f"Error al procesar el código: {str(e)}")
 
   def generate_image_from_code(self, code, code_format):
-    # Generar imagen basada en el código y formato seleccionado
-    self.current_image = ImageProcessor.generate_image_from_code(code, code_format=code_format)
-    # Mostrar la imagen en el componente
-    if self.current_image:
-      self.image_display.set_image(self.current_image, None)
-    else:
-      print("No se pudo generar la imagen desde el código")
+    try:
+      # Generar imagen basada en el código y formato seleccionado
+      self.current_image = ImageProcessor.generate_image_from_code(code, code_format=code_format)
+      # Mostrar la imagen en el componente
+      if self.current_image:
+        self.image_display.set_image(self.current_image, None)
+      else:
+        messagebox.showwarning("Advertencia", "No se pudo generar la imagen desde el código")
+        print("No se pudo generar la imagen desde el código")
+    except Exception as e:
+      messagebox.showerror("Error", f"Error al generar la imagen: {str(e)}")
+      print(f"Error al generar la imagen: {str(e)}")
 
   def save_image(self):
-    # Obtenemos la imagen actual del componente
-    image, _ = self.image_display.get_image()
-    if image:
-      save_image_file(image)
+    try:
+      # Obtenemos la imagen actual del componente
+      image, _ = self.image_display.get_image()
+      if image:
+        save_image_file(image)
+      else:
+        messagebox.showwarning("Advertencia", "No hay imagen para guardar. Por favor, genere una imagen primero.")
+    except Exception as e:
+      messagebox.showerror("Error", f"Error al guardar la imagen: {str(e)}")

@@ -1,6 +1,7 @@
 # src/loomer/ui/tabs/code_translation_tab.py
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 
 from ...utils.validators import validate_numeric_input, check_numeric_content
 from ...core.code_processor import CodeProcessor
@@ -52,7 +53,7 @@ class CodeTranslationTab:
     self.source_code_text = tk.Text(left_frame, bg=self.styles.COLOR_PRIMARIO, height=20,
                                     width=30)
     self.source_code_text.pack(fill=tk.BOTH, expand=True)
-    self.source_code_text.insert(tk.END, "021301233210")
+    self.source_code_text.insert(tk.END, "")
 
     # Validación para permitir solo números
     # self.source_code_text.bind("<KeyPress>", self.on_key_press)
@@ -91,7 +92,7 @@ class CodeTranslationTab:
     self.target_code_text = tk.Text(right_frame, bg=self.styles.COLOR_PRIMARIO, height=20,
                                     width=30, state="disabled")
     self.target_code_text.pack(fill=tk.BOTH, expand=True)
-    self.insert_target_code("021301233210")
+    self.insert_target_code("")
 
   def on_key_press(self, event):
     return validate_numeric_input(event)
@@ -100,21 +101,31 @@ class CodeTranslationTab:
     check_numeric_content(self.source_code_text)
 
   def translate_code(self):
-    # Obtener el código ingresado por el usuario
-    source_code = self.source_code_text.get("1.0", tk.END).strip()
-    source_format = self.source_format_combo.get_selected_format()
-    target_format = self.target_format_selector.get_selected_format()
+    try:
+      # Obtener el código ingresado por el usuario
+      source_code = self.source_code_text.get("1.0", tk.END).strip()
 
-    # Realizar la traducción
-    translated_code = CodeProcessor.translate_code(
-      source_code,
-      source_format=source_format,
-      target_format=target_format
-    )
-    if 'error' in translated_code:
-      self.insert_target_code(translated_code['error'])
-    else:
-      self.insert_target_code(''.join([str(i) for i in translated_code['result']]))
+      if not source_code:
+        messagebox.showwarning("Advertencia", "Por favor ingrese un código de cadena para traducir.")
+        return
+
+      source_format = self.source_format_combo.get_selected_format()
+      target_format = self.target_format_selector.get_selected_format()
+
+      # Realizar la traducción
+      translated_code = CodeProcessor.translate_code(
+        source_code,
+        source_format=source_format,
+        target_format=target_format
+      )
+      if 'error' in translated_code:
+        messagebox.showerror("Error de traducción", translated_code['error'])
+        self.insert_target_code(translated_code['error'])
+      else:
+        self.insert_target_code(''.join([str(i) for i in translated_code['result']]))
+    except Exception as e:
+      messagebox.showerror("Error", f"Ocurrió un error al traducir el código: {str(e)}")
+      self.insert_target_code(f"Error: {str(e)}")
 
   def insert_target_code(self, text):
     self.target_code_text.config(state="normal")

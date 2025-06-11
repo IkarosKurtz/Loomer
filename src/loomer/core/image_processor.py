@@ -79,7 +79,6 @@ class ImageProcessor:
       code, _ = calculate(code)
     else:
       raise ValueError(f"Formato de código no reconocido: {code_format}")
-    print(code)
     image = f4_to_image(code, padding=15, scale=60)
 
     return image

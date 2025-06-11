@@ -141,11 +141,11 @@ def f8_to_image(chain_code, padding=5, scale=1):
   pil_img = Image.fromarray(img)
 
   # Calculate entropy for reporting
-  entropia = calcular_entropia(chain_code)
-  print(f"Imagen reconstruida con 8F desde la cadena de códigos.")
-  print(f"Dimensiones de la imagen: {width}x{height}")
-  print(f"Longitud de la cadena de códigos: {len(chain_code)}")
-  print(f"Entropía de la cadena de códigos: {entropia:.4f}")
+  # entropia = calcular_entropia(chain_code)
+  # print(f"Imagen reconstruida con 8F desde la cadena de códigos.")
+  # print(f"Dimensiones de la imagen: {width}x{height}")
+  # print(f"Longitud de la cadena de códigos: {len(chain_code)}")
+  # print(f"Entropía de la cadena de códigos: {entropia:.4f}")
 
   return pil_img
 
@@ -206,11 +206,11 @@ def f4_to_image(chain_code, padding=5, scale=10):
   pil_img = Image.fromarray(img)
 
   # Calculate entropy for reporting
-  entropia = calcular_entropia(chain_code)
-  print(f"Imagen reconstruida con 4F desde la cadena de códigos.")
-  print(f"Dimensiones de la imagen: {width}x{height}")
-  print(f"Longitud de la cadena de códigos: {len(chain_code)}")
-  print(f"Entropía de la cadena de códigos: {entropia:.4f}")
+  # entropia = calcular_entropia(chain_code)
+  # print(f"Imagen reconstruida con 4F desde la cadena de códigos.")
+  # print(f"Dimensiones de la imagen: {width}x{height}")
+  # print(f"Longitud de la cadena de códigos: {len(chain_code)}")
+  # print(f"Entropía de la cadena de códigos: {entropia:.4f}")
 
   return pil_img
 

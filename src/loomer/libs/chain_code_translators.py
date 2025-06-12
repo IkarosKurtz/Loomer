@@ -306,8 +306,9 @@ def convertirAF8toF8(cadena):
 # cadena = [0, 0, 0, 0, 1, 1, 2, 1, 2, 2, 2, 2, 3, 3, 0, 3]
 
 # cadena = [0,0,0,0,1,1,2,1,2,2,2,2,3,3,0,3]
+cadena = [1, 2, 4, 6, 6]
 
-# print(convertirF4toF8(cadena))
+print(convertirF8toF4(cadena))
 # res = convertirF4toF8(cadena)
 # print(res, obtener_datos_de_cadena(res))
 # print("".join([str(i) for i in cadena]) ==

@@ -25,7 +25,7 @@ class LoomerApp:
       base_path = sys._MEIPASS
     else:
       # Ruta base cuando se ejecuta desde el script
-      base_path = os.path.dirname(os.path.abspath(__file__))
+      base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
     # Ruta completa al archivo PNG
     image_path = os.path.join(base_path, "assets", "Loomer.png")
 

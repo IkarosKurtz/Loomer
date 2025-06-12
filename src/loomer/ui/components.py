@@ -81,17 +81,13 @@ class ImageDisplayFrame:
       self.image_path = image_path
       # Redimensionar manteniendo proporción
       img_width, img_height = pil_image.size
-      max_width, max_height = self.image_size
-
-      # Calcular la escala para ajustar la imagen al contenedor
+      max_width, max_height = self.image_size      # Calcular la escala para ajustar la imagen al contenedor
+      # Siempre redimensionar la imagen, ya sea más grande o más pequeña
       scale = min(max_width / img_width, max_height / img_height)
-
-      if scale < 1:  # Solo redimensionar si la imagen es más grande que el tamaño máximo
-        new_width = int(img_width * scale)
-        new_height = int(img_height * scale)
-        resized_img = pil_image.resize((new_width, new_height), Image.LANCZOS)
-      else:
-        resized_img = pil_image
+      new_width = int(img_width * scale)
+      new_height = int(img_height * scale)
+      # Usar NEAREST para preservar los píxeles nítidos en imágenes pixeladas
+      resized_img = pil_image.resize((new_width, new_height), Image.NEAREST)
 
       # Crear PhotoImage y mostrarla
       self.photo_image = ImageTk.PhotoImage(resized_img)

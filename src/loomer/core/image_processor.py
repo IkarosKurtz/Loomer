@@ -1,7 +1,6 @@
 # src/loomer/core/image_processor.py
 
 from src.loomer.libs.f8_f4_to_img import f4_to_image
-from src.loomer.libs.imt_to_8f import procesar_imagen_freeman_8
 from src.loomer.utils.pipe import Methods, Pipe
 from src.loomer.libs.img_to_4f import procesar_imagen_freeman
 
@@ -27,7 +26,11 @@ class ImageProcessor:
     if code_format == "F4":
       code = "".join([str(i) for i in procesar_imagen_freeman(image)])
     elif code_format == "F8":
-      code = "".join([str(i) for i in procesar_imagen_freeman_8(image)])
+      code = procesar_imagen_freeman(image)
+      calculate = Pipe('F4', 'F8')
+      code, _ = calculate(code)
+
+      code = "".join([str(i) for i in code])
     elif code_format == "AF8":
       chain_code = procesar_imagen_freeman(image)
       calculate = Pipe('F4', 'F8', 'AF8')

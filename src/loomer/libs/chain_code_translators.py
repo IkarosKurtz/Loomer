@@ -150,6 +150,8 @@ def convertirF8toF4(cadena):
 
   for i in range(len(cadena)):
     if i == 0:
+      if (cadena[i] == 1):
+        cadena_convertida.extend([1, 0])
       continue
     if (_F8toF4[(cadena[i - 1], cadena[i])] == None):
       continue
@@ -157,9 +159,13 @@ def convertirF8toF4(cadena):
 
   # Add this to process the last-to-first pair (close the chain)
   if (_F8toF4.get((cadena[-1], cadena[0])) is not None):
-    cadena_convertida.extend(_F8toF4[(cadena[-1], cadena[0])])
-
-  cadena_convertida.pop()
+    if (cadena[-1] == 7):
+      pass
+    elif (cadena[-1] == 6):
+      cadena_convertida.append(cadena_convertida[-1])
+    else:
+      cadena_convertida.extend(_F8toF4[(cadena[-1], cadena[0])])
+      cadena_convertida.pop()
 
   return cadena_convertida
 

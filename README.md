@@ -6,9 +6,14 @@
 
 Loomer es una aplicación para procesar y gestionar códigos de cadena con interfaz gráfica. Permite convertir entre imágenes y representaciones numéricas de contornos (códigos de cadena) a través de una interfaz intuitiva y funcional.
 
+## Manual de Usuario
+
+Para obtener más información sobre cómo usar Loomer, consulte el [Manual de Usuario](./MANUAL_DE_USUARIO.md).
+
 ## Tabla de Contenidos
 
 - [Loomer](#loomer)
+  - [Manual de Usuario](#manual-de-usuario)
   - [Tabla de Contenidos](#tabla-de-contenidos)
   - [Instalación](#instalación)
   - [Ejecución](#ejecución)

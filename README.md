@@ -9,6 +9,7 @@ Loomer es una aplicación para procesar y gestionar códigos de cadena con inter
 ## Manual de Usuario
 
 Para obtener más información sobre cómo usar Loomer, consulte el [Manual de Usuario](./MANUAL_DE_USUARIO.md).
+Código importante, lo que contiene los códigos de cadena y sus conversiones [código](https://github.com/IkarosKurtz/Loomer/tree/master/src/loomer/libs)
 
 ## Tabla de Contenidos
 
